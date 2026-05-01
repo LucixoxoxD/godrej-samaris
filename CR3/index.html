@@ -547,78 +547,142 @@
 }
 
 /* FLOOR PLANS - GATED */
+/* FLOOR PLANS - TABBED */
 .floorplans{
   background:
     radial-gradient(800px 500px at 30% 0%, rgba(215,181,109,.08), transparent 45%),
     linear-gradient(180deg, #0a0a0b, #111112);
 }
-.fp-grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:16px;
-  position:relative;
+.fp-tabs{
+  display:flex;
+  gap:0;
+  margin-bottom:20px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  width:fit-content;
 }
-.fp-card{
+.fp-tab{
+  padding:12px 28px;
+  font:600 .95rem Inter, sans-serif;
+  color:rgba(255,255,255,.40);
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  transition:all .25s ease;
+  white-space:nowrap;
+}
+.fp-tab.active{
+  background:var(--gold);
+  color:#0d0d0e;
+  border-radius:12px;
+}
+.fp-tab:not(.active):hover{
+  color:var(--text);
+  background:rgba(255,255,255,.08);
+}
+
+
+.fp-tab:not(:last-child){
+  border-right:1px solid rgba(255,255,255,.10);
+}
+.fp-tab:not(.active):hover{
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+}
+.fp-viewer{
   position:relative;
   border-radius:var(--radius);
   overflow:hidden;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.04);
 }
-.fp-card img{
+.fp-slide{
+  display:none;
+  position:relative;
+}
+.fp-slide.active{
+  display:block;
+}
+.fp-slide img{
   width:100%;
   aspect-ratio:4/3;
   object-fit:cover;
   display:block;
-  filter:blur(8px) brightness(.7);
-  transform:scale(1.05);
-  transition:filter .4s ease;
+  filter:blur(10px) brightness(.65);
+  transform:scale(1.06);
 }
-.fp-card .fp-label{
+.fp-slide-overlay{
   position:absolute;
-  left:14px; right:14px; bottom:14px; z-index:2;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  background:rgba(0,0,0,.20);
+  z-index:2;
+}
+.fp-slide-overlay .fp-unlock-btn{
+  padding:14px 36px;
+  border-radius:14px;
+  border:none;
+  font:600 1rem Inter, sans-serif;
+  cursor:pointer;
+  background:var(--gold);
+  color:#0d0d0e;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:transform .2s ease, box-shadow .2s ease;
+  box-shadow:0 8px 30px rgba(215,181,109,.25);
+}
+.fp-slide-overlay .fp-unlock-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(215,181,109,.35);
+}
+.fp-slide-overlay .fp-unlock-btn:active{
+  transform:scale(0.97);
+}
+.fp-slide-overlay .fp-unlock-btn svg{
+  width:18px; height:18px;
+}
+.fp-slide-label{
+  position:absolute;
+  left:14px; right:14px; bottom:14px;
+  z-index:3;
   padding:12px 14px;
   border-radius:16px;
   background:rgba(7,7,8,.65);
   border:1px solid rgba(255,255,255,.10);
   backdrop-filter:blur(14px);
 }
-.fp-card .fp-label strong{display:block; font-size:1rem; margin-bottom:3px}
-.fp-card .fp-label span{display:block; color:var(--muted); font-size:.85rem}
-.fp-lock-overlay{
-  position:absolute;
-  inset:0;
-  z-index:3;
-  display:grid;
-  place-items:center;
-  background:rgba(0,0,0,.35);
-  backdrop-filter:blur(2px);
+.fp-slide-label strong{display:block; font-size:1rem; margin-bottom:3px; color:#fff}
+.fp-slide-label span{display:block; color:var(--muted); font-size:.85rem}
+ 
+@media(max-width:760px){
+  .fp-tabs{width:100%}
+  .fp-tab{
+    flex:1;
+    text-align:center;
+    padding:11px 12px;
+    font-size:.85rem;
+  }
+  .fp-viewer{border-radius:20px}
+  .fp-slide img{aspect-ratio:3/2}
+  .fp-slide-label{
+    left:8px; right:8px; bottom:8px;
+    padding:9px 10px;
+    border-radius:12px;
+  }
+  .fp-slide-label strong{font-size:.88rem}
+  .fp-slide-label span{font-size:.75rem}
+  .fp-slide-overlay .fp-unlock-btn{
+    padding:12px 28px;
+    font-size:.9rem;
+    border-radius:12px;
+  }
 }
-.fp-lock-icon{
-  width:56px; height:56px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.18);
-  backdrop-filter:blur(12px);
-}
-.fp-lock-icon svg{width:24px; height:24px; color:var(--gold)}
-.fp-unlock-bar{
-  margin-top:24px;
-  padding:28px;
-  border-radius:var(--radius);
-  background:linear-gradient(135deg, rgba(215,181,109,.12), rgba(255,255,255,.05));
-  border:1px solid rgba(215,181,109,.25);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  flex-wrap:wrap;
-}
-.fp-unlock-bar h4{margin:0 0 6px; font-size:1.4rem}
-.fp-unlock-bar p{margin:0; color:var(--muted); font-size:.94rem; line-height:1.6}
-
 /* WHY INVEST NOW */
 .why-invest{
   background:
@@ -1310,66 +1374,61 @@
         <p>View detailed floor plans for 3 BHK, 4 BHK and Penthouse configurations. Submit your details to unlock.</p>
       </div>
  
-      <div class="fp-grid">
-        <!-- Card 1: 3 BHK -->
-        <div class="fp-card reveal">
-          <img src="img/compressed_LAYOUT%20CARD%20IMAGE%202.jpg" alt="3 BHK floor plan preview" />
-          <div class="fp-label">
-            <strong>3 BHK Layout</strong>
-            <span>~3,000 sq.ft. · Spacious balcony planning</span>
-          </div>
-          <div class="fp-lock-overlay">
-            <div class="fp-lock-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-              </svg>
-            </div>
-          </div>
-        </div>
- 
-        <!-- Card 2: 4 BHK -->
-        <div class="fp-card reveal">
-          <img src="img/compressed_LAYOUT%20CARD%20IMAGE%203.jpg" alt="4 BHK floor plan preview" />
-          <div class="fp-label">
-            <strong>4 BHK Layout</strong>
-            <span>~4,000 sq.ft. · Premium family configuration</span>
-          </div>
-          <div class="fp-lock-overlay">
-            <div class="fp-lock-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-              </svg>
-            </div>
-          </div>
-        </div>
- 
-        <!-- Card 3: Master Plan -->
-        <div class="fp-card reveal">
-          <img src="img/compressed_LAYOUT%20CARD.jpg" alt="Master plan preview" />
-          <div class="fp-label">
-            <strong>Master Plan</strong>
-            <span>7.5 acres · Tower & greens layout</span>
-          </div>
-          <div class="fp-lock-overlay">
-            <div class="fp-lock-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+      <!-- Tabs -->
+      <div class="fp-tabs reveal">
+        <button class="fp-tab active" data-fp-tab="3bhk">3 BHK</button>
+        <button class="fp-tab" data-fp-tab="4bhk">4 BHK</button>
+        <button class="fp-tab" data-fp-tab="penthouse">Penthouse</button>
       </div>
  
-      <!-- Unlock CTA bar -->
-      <div class="fp-unlock-bar reveal">
-        <div>
-          <h4 class="serif">Unlock Official Floor Plans & Brochure</h4>
-          <p>Get detailed unit layouts, carpet area breakdowns and the official Godrej Samaris brochure — sent directly to your WhatsApp.</p>
+      <!-- Viewer -->
+      <div class="fp-viewer reveal">
+ 
+        <!-- 3 BHK slide -->
+        <div class="fp-slide active" data-fp-slide="3bhk">
+          <img src="img/floor-plan.jpg" alt="3 BHK floor plan" />
+          <div class="fp-slide-overlay">
+            <button class="fp-unlock-btn" data-open-modal="leadModal">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+              Unlock Floor Plans
+            </button>
+          </div>
+            <!-- <div class="fp-slide-label">
+              <strong>3 BHK Layout</strong>
+              <span>~3,000 sq.ft. · Spacious balcony planning</span>
+            </div> -->
         </div>
-        <button class="btn gold shine" data-open-modal="leadModal" style="white-space:nowrap;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
-          Unlock Floor Plans
-        </button>
+ 
+        <!-- 4 BHK slide -->
+        <div class="fp-slide" data-fp-slide="4bhk">
+          <img src="img/4bhk.jpg" alt="4 BHK floor plan" />
+          <div class="fp-slide-overlay">
+            <button class="fp-unlock-btn" data-open-modal="leadModal">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+              Unlock Floor Plans
+            </button>
+          </div>
+          <!-- <div class="fp-slide-label">
+            <strong>4 BHK Layout</strong>
+            <span>~4,000 sq.ft. · Premium family configuration</span>
+          </div> -->
+        </div>
+ 
+        <!-- Penthouse slide -->
+        <div class="fp-slide" data-fp-slide="penthouse">
+          <img src="img/penthouse.jpg" alt="Penthouse floor plan" />
+          <div class="fp-slide-overlay">
+            <button class="fp-unlock-btn" data-open-modal="leadModal">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+              Unlock Floor Plans
+            </button>
+          </div>
+          <!-- <div class="fp-slide-label">
+            <strong>Penthouse Layout</strong>
+            <span>Ultra-exclusive · Limited release configuration</span>
+          </div> -->
+        </div>
+ 
       </div>
     </div>
   </section>
@@ -1885,5 +1944,16 @@ if (heroBg && heroBg.closest('.hero-bg') && !heroBg.closest('.hero-image-wrap'))
       });
     });
   </script>
+<script>
+document.querySelectorAll('.fp-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.fpTab;
+    document.querySelectorAll('.fp-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.fp-slide').forEach(s => s.classList.remove('active'));
+    document.querySelector('.fp-slide[data-fp-slide="' + target + '"]').classList.add('active');
+  });
+});
+</script>
 </body>
 </html>
