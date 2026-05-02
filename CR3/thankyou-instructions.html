@@ -1,0 +1,26 @@
+<!-- ============================================== -->
+<!-- TWO THINGS TO DO:                              -->
+<!-- 1. Add thankyou.html to your repo (same level  -->
+<!--    as index.html)                              -->
+<!-- 2. Update the form submit JS in index.html     -->
+<!-- ============================================== -->
+
+
+<!-- ── In index.html, FIND this block (around line 1976-1978): ── -->
+
+<!--
+FIND:
+    // Open WhatsApp
+    setTimeout(() => {
+      window.open(`https://wa.me/919898707001?text=${message}`, '_blank', 'noopener');
+    }, 400);
+
+REPLACE WITH:
+    // Open WhatsApp then redirect to thank you page
+    setTimeout(() => {
+      window.open(`https://wa.me/919898707001?text=${message}`, '_blank', 'noopener');
+      setTimeout(() => {
+        window.location.href = 'thankyou.html';
+      }, 500);
+    }, 400);
+-->
