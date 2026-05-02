@@ -2067,9 +2067,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     form.reset();
     showToast('Redirecting to WhatsApp…');
 
-    // Open WhatsApp
+    // Open WhatsApp then redirect to thank you page
     setTimeout(() => {
       window.open(`https://wa.me/919898707001?text=${message}`, '_blank', 'noopener');
+      setTimeout(() => {
+        window.location.href = 'thankyou.html';
+      }, 500);
     }, 400);
   });
 });
