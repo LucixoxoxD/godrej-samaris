@@ -2041,6 +2041,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(modal); });
     });
 
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwKcmr0kV-r9WJ6GQbBDfVrpQCXoA6L5OXgLJp53GNYEp0n2OuvJBUZF33ZXLw-Epv1/exec';
+
     document.querySelectorAll('.popupForm, #heroForm').forEach(form => {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -2050,30 +2052,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const phone   = (formData.get('phone')  || '').trim();
     const config  = (formData.get('config') || formData.get('interest') || '').trim();
 
-    // Build WhatsApp message
-    const lines = ['Hi, I am interested in Godrej Samaris.'];
-    if (name)   lines.push(`Name: ${name}`);
-    if (phone)  lines.push(`Phone: ${phone}`);
-    if (config) lines.push(`Configuration: ${config}`);
-    const message = encodeURIComponent(lines.join('\n'));
-
-    // Deduplicate in session — always overwrite with latest
     sessionStorage.setItem('godrej_samaris_lead', JSON.stringify({
       name, phone, config, timestamp: Date.now()
     }));
 
-    // Close modal + reset form
     allModals.forEach(closeModal);
     form.reset();
-    showToast('Redirecting to WhatsApp…');
+    showToast('Thank you! Our advisor will call you shortly.');
 
-    // Open WhatsApp then redirect to thank you page
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, interest: config })
+    }).catch(() => {});
+
     setTimeout(() => {
-      window.open(`https://wa.me/919898707001?text=${message}`, '_blank', 'noopener');
-      setTimeout(() => {
-        window.location.href = 'thankyou.html';
-      }, 500);
-    }, 400);
+      window.location.href = 'thankyou.html';
+    }, 1200);
   });
 });
 
